@@ -4,9 +4,9 @@ function _exit() {
   exit -1
 }
 
-# Exit on first error, print all commands.
-set -ev
-set -o pipefail
+## Exit on first error, print all commands.
+#set -ev
+#set -o pipefail
 export FABRIC_CFG_PATH=$PWD
 
 COMPOSE_FILE_CA=docker/docker-compose-ca.yaml
@@ -25,7 +25,16 @@ function networkUp() {
   go get github.com/hyperledger/fabric-ca/cmd/...
 
   . organizations/fabric-ca/registerEnroll.sh
+
+  infoln "Creating InvestorOrg Identities"
   createInvestorOrg
+
+  infoln "Creating ManagementOrg Identities"
+  createManagementOrg
+
+#  infoln "Creating InvestorOrg Identities"
+#  createInvestorOrg
+
   COMPOSE_FILES="-f ${COMPOSE_FILE_BASE}"
 
   if [ "${DATABASE}" == "couchdb" ]; then

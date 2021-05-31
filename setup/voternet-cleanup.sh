@@ -13,6 +13,18 @@ function networkDown() {
   rm  ./organizations/fabric-ca/investorOrg/IssuerPublicKey
   rm  ./organizations/fabric-ca/investorOrg/IssuerRevocationPublicKey
   rm  ./organizations/fabric-ca/investorOrg/tls-cert.pem
+  
+  
+   rm -rf ./organizations/fabric-ca/managementOrg/ca
+  rm -rf ./organizations/fabric-ca/managementOrg/msp
+  rm -rf ./organizations/fabric-ca/managementOrg/peers
+  rm -rf ./organizations/fabric-ca/managementOrg/tlsca
+  rm -rf ./organizations/fabric-ca/managementOrg/users
+  rm  ./organizations/fabric-ca/managementOrg/ca-cert.pem
+  rm  ./organizations/fabric-ca/managementOrg/fabric-ca-server.db
+  rm  ./organizations/fabric-ca/managementOrg/IssuerPublicKey
+  rm  ./organizations/fabric-ca/managementOrg/IssuerRevocationPublicKey
+  rm  ./organizations/fabric-ca/managementOrg/tls-cert.pem
 
 
 

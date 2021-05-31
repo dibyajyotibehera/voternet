@@ -27,14 +27,14 @@ services:
   ca_management_org:
     image: hyperledger/fabric-ca:latest
     labels:
-      service: hyperledger-fabric-voternet
+      service: hyperledger-fabric-voternet-management
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca-managementOrg
       - FABRIC_CA_SERVER_TLS_ENABLED=true
       - FABRIC_CA_SERVER_PORT=8054
     ports:
-      - "8054:8064"
+      - "8054:8054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
       - ../organizations/fabric-ca/managementOrg:/etc/hyperledger/fabric-ca-server
