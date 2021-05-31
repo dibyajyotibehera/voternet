@@ -160,9 +160,9 @@ function createManagementOrg() {
 
 function createOrderer() {
   infoln "Enrolling the CA admin"
-  mkdir -p organizations/ordererOrganizations/example.com
+  mkdir -p organizations/fabric-ca/ordererOrg
 
-  export FABRIC_CA_CLIENT_HOME=${PWD}/organizations/ordererOrganizations/example.com
+  export FABRIC_CA_CLIENT_HOME=${PWD}/organizations/fabric-ca/ordererOrg
 
   set -x
   fabric-ca-client enroll -u https://admin:adminpw@localhost:9054 --caname ca-orderer --tls.certfiles "${PWD}/organizations/fabric-ca/ordererOrg/tls-cert.pem"
@@ -181,7 +181,7 @@ function createOrderer() {
     OrganizationalUnitIdentifier: admin
   OrdererOUIdentifier:
     Certificate: cacerts/localhost-9054-ca-orderer.pem
-    OrganizationalUnitIdentifier: orderer' >"${PWD}/organizations/ordererOrganizations/example.com/msp/config.yaml"
+    OrganizationalUnitIdentifier: orderer' >"${PWD}/organizations/fabric-ca/ordererOrg/msp/config.yaml"
 
   infoln "Registering orderer"
   set -x
@@ -195,30 +195,30 @@ function createOrderer() {
 
   infoln "Generating the orderer msp"
   set -x
-  fabric-ca-client enroll -u https://orderer:ordererpw@localhost:9054 --caname ca-orderer -M "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp" --csr.hosts orderer.example.com --csr.hosts localhost --tls.certfiles "${PWD}/organizations/fabric-ca/ordererOrg/tls-cert.pem"
+  fabric-ca-client enroll -u https://orderer:ordererpw@localhost:9054 --caname ca-orderer -M "${PWD}/organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/msp" --csr.hosts orderer.example.com --csr.hosts localhost --tls.certfiles "${PWD}/organizations/fabric-ca/ordererOrg/tls-cert.pem"
   { set +x; } 2>/dev/null
 
-  cp "${PWD}/organizations/ordererOrganizations/example.com/msp/config.yaml" "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/config.yaml"
+  cp "${PWD}/organizations/fabric-ca/ordererOrg/msp/config.yaml" "${PWD}/organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/msp/config.yaml"
 
   infoln "Generating the orderer-tls certificates"
   set -x
-  fabric-ca-client enroll -u https://orderer:ordererpw@localhost:9054 --caname ca-orderer -M "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls" --enrollment.profile tls --csr.hosts orderer.example.com --csr.hosts localhost --tls.certfiles "${PWD}/organizations/fabric-ca/ordererOrg/tls-cert.pem"
+  fabric-ca-client enroll -u https://orderer:ordererpw@localhost:9054 --caname ca-orderer -M "${PWD}/organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls" --enrollment.profile tls --csr.hosts orderer.example.com --csr.hosts localhost --tls.certfiles "${PWD}/organizations/fabric-ca/ordererOrg/tls-cert.pem"
   { set +x; } 2>/dev/null
 
-  cp "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/tlscacerts/"* "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt"
-  cp "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/signcerts/"* "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt"
-  cp "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/keystore/"* "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.key"
+  cp "${PWD}/organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/tlscacerts/"* "${PWD}/organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/ca.crt"
+  cp "${PWD}/organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/signcerts/"* "${PWD}/organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/server.crt"
+  cp "${PWD}/organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/keystore/"* "${PWD}/organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/server.key"
 
-  mkdir -p "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts"
-  cp "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/tlscacerts/"* "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
+  mkdir -p "${PWD}/organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/msp/tlscacerts"
+  cp "${PWD}/organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/tlscacerts/"* "${PWD}/organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
 
-  mkdir -p "${PWD}/organizations/ordererOrganizations/example.com/msp/tlscacerts"
-  cp "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/tlscacerts/"* "${PWD}/organizations/ordererOrganizations/example.com/msp/tlscacerts/tlsca.example.com-cert.pem"
+  mkdir -p "${PWD}/organizations/fabric-ca/ordererOrg/msp/tlscacerts"
+  cp "${PWD}/organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/tlscacerts/"* "${PWD}/organizations/fabric-ca/ordererOrg/msp/tlscacerts/tlsca.example.com-cert.pem"
 
   infoln "Generating the admin msp"
   set -x
-  fabric-ca-client enroll -u https://ordererAdmin:ordererAdminpw@localhost:9054 --caname ca-orderer -M "${PWD}/organizations/ordererOrganizations/example.com/users/Admin@example.com/msp" --tls.certfiles "${PWD}/organizations/fabric-ca/ordererOrg/tls-cert.pem"
+  fabric-ca-client enroll -u https://ordererAdmin:ordererAdminpw@localhost:9054 --caname ca-orderer -M "${PWD}/organizations/fabric-ca/ordererOrg/users/Admin@example.com/msp" --tls.certfiles "${PWD}/organizations/fabric-ca/ordererOrg/tls-cert.pem"
   { set +x; } 2>/dev/null
 
-  cp "${PWD}/organizations/ordererOrganizations/example.com/msp/config.yaml" "${PWD}/organizations/ordererOrganizations/example.com/users/Admin@example.com/msp/config.yaml"
+  cp "${PWD}/organizations/fabric-ca/ordererOrg/msp/config.yaml" "${PWD}/organizations/fabric-ca/ordererOrg/users/Admin@example.com/msp/config.yaml"
 }

@@ -10,6 +10,9 @@ function _exit() {
 export FABRIC_CFG_PATH=$PWD
 
 COMPOSE_FILE_CA=docker/docker-compose-ca.yaml
+COMPOSE_FILE_BASE=docker/docker-compose-voternet-net.yaml
+COMPOSE_FILE_COUCH=docker/docker-compose-couch.yaml
+
 
 function networkUp() {
   #  checkPrereqs
@@ -32,14 +35,10 @@ function networkUp() {
   infoln "Creating ManagementOrg Identities"
   createManagementOrg
 
-#  infoln "Creating InvestorOrg Identities"
-#  createInvestorOrg
+  infoln "Creating Orderer Org Identities"
+  createOrderer
 
-  COMPOSE_FILES="-f ${COMPOSE_FILE_BASE}"
-
-  if [ "${DATABASE}" == "couchdb" ]; then
-    COMPOSE_FILES="${COMPOSE_FILES} -f ${COMPOSE_FILE_COUCH}"
-  fi
+  COMPOSE_FILES="-f ${COMPOSE_FILE_BASE} -f ${COMPOSE_FILE_COUCH}"
 
   docker-compose ${COMPOSE_FILES} up -d 2>&1
 

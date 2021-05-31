@@ -1,8 +1,10 @@
 COMPOSE_FILE_CA=docker/docker-compose-ca.yaml
+COMPOSE_FILE_BASE=docker/docker-compose-voternet-net.yaml
+COMPOSE_FILE_COUCH=docker/docker-compose-couch.yaml
 
 function networkDown() {
   # stop org3 containers also in addition to org1 and org2, in case we were running sample to add org3
-  docker-compose  -f $COMPOSE_FILE_CA down --volumes --remove-orphans
+  docker-compose -f $COMPOSE_FILE_BASE -f $COMPOSE_FILE_COUCH -f $COMPOSE_FILE_CA  down --volumes --remove-orphans
   rm -rf ./organizations/fabric-ca/investorOrg/ca
   rm -rf ./organizations/fabric-ca/investorOrg/msp
   rm -rf ./organizations/fabric-ca/investorOrg/peers
@@ -25,6 +27,8 @@ function networkDown() {
   rm  ./organizations/fabric-ca/managementOrg/IssuerPublicKey
   rm  ./organizations/fabric-ca/managementOrg/IssuerRevocationPublicKey
   rm  ./organizations/fabric-ca/managementOrg/tls-cert.pem
+
+  rm  -rf ./organizations/fabric-ca/ordererOrg
 
 
 
