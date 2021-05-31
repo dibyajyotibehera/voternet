@@ -19,7 +19,7 @@ services:
       - "7054:7054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
-      - ../organizations/fabric-ca/investorOrg_backup:/etc/hyperledger/fabric-ca-server
+      - ../organizations/fabric-ca/investorOrg:/etc/hyperledger/fabric-ca-server
     container_name: ca_investorOrg
     networks:
       - voternet

@@ -41,7 +41,7 @@ function createInvestorOrg() {
 
   infoln "Generating the peer0 msp"
   set -x
-  fabric-ca-client enroll -u https://peer0:peer0pw@localhost:7054 --caname ca-investorOrg -M "${PWD}/organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/msp" --csr.hosts peer0.org1.example.com --tls.certfiles "${PWD}/organizations/fabric-ca/investorOrg/tls-cert.pem"
+  fabric-ca-client enroll -u https://peer0:peer0pw@localhost:7054 --caname ca-investorOrg -M "${PWD}/organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/msp" --csr.hosts peer0.investorOrg.voternet.com --tls.certfiles "${PWD}/organizations/fabric-ca/investorOrg/tls-cert.pem"
   { set +x; } 2>/dev/null
 
   cp "${PWD}/organizations/fabric-ca/investorOrg/msp/config.yaml" "${PWD}/organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/msp/config.yaml"
@@ -49,34 +49,34 @@ function createInvestorOrg() {
   infoln "Generating the peer0-tls certificates"
   set -x
   fabric-ca-client enroll -u https://peer0:peer0pw@localhost:7054 --caname ca-investorOrg -M "${PWD}/organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/tls" --enrollment.profile tls --csr.hosts peer0.investorOrg.voternet.com --csr.hosts localhost --tls.certfiles "${PWD}/organizations/fabric-ca/investorOrg/tls-cert.pem"
+
+  cp "${PWD}/organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/tls/tlscacerts/"* "${PWD}/organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/tls/ca.crt"
+  cp "${PWD}/organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/tls/signcerts/"* "${PWD}/organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/tls/server.crt"
+  cp "${PWD}/organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/tls/keystore/"* "${PWD}/organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/tls/server.key"
+
+  mkdir -p "${PWD}/organizations/fabric-ca/investorOrg/msp/tlscacerts"
+  cp "${PWD}/organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/tls/tlscacerts/"* "${PWD}/organizations/fabric-ca/investorOrg/msp/tlscacerts/ca.crt"
+
+  mkdir -p "${PWD}/organizations/fabric-ca/investorOrg/tlsca"
+  cp "${PWD}/organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/tls/tlscacerts/"* "${PWD}/organizations/fabric-ca/investorOrg/tlsca/tlsca.investorOrg.voternet.com-cert.pem"
+
+  mkdir -p "${PWD}/organizations/fabric-ca/investorOrg/ca"
+  cp "${PWD}/organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/msp/cacerts/"* "${PWD}/organizations/fabric-ca/investorOrg/ca/ca.investorOrg.voternet.com-cert.pem"
   { set +x; } 2>/dev/null
-
-  cp "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/peers/peer0.org1.example.com/tls/tlscacerts/"* "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/peers/peer0.org1.example.com/tls/ca.crt"
-  cp "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/peers/peer0.org1.example.com/tls/signcerts/"* "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/peers/peer0.org1.example.com/tls/server.crt"
-  cp "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/peers/peer0.org1.example.com/tls/keystore/"* "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/peers/peer0.org1.example.com/tls/server.key"
-
-  mkdir -p "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/msp/tlscacerts"
-  cp "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/peers/peer0.org1.example.com/tls/tlscacerts/"* "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/msp/tlscacerts/ca.crt"
-
-  mkdir -p "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/tlsca"
-  cp "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/peers/peer0.org1.example.com/tls/tlscacerts/"* "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/tlsca/tlsca.org1.example.com-cert.pem"
-
-  mkdir -p "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/ca"
-  cp "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/peers/peer0.org1.example.com/msp/cacerts/"* "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/ca/ca.org1.example.com-cert.pem"
 
   infoln "Generating the user msp"
   set -x
-  fabric-ca-client enroll -u https://user1:user1pw@localhost:7054 --caname ca-investorOrg -M "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/users/User1@org1.example.com/msp" --tls.certfiles "${PWD}/organizations/fabric-ca/investorOrg/tls-cert.pem"
+  fabric-ca-client enroll -u https://user1:user1pw@localhost:7054 --caname ca-investorOrg -M "${PWD}/organizations/fabric-ca/investorOrg/users/User1@investorOrg.voternet.com/msp" --tls.certfiles "${PWD}/organizations/fabric-ca/investorOrg/tls-cert.pem"
   { set +x; } 2>/dev/null
 
-  cp "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/msp/config.yaml" "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/users/User1@org1.example.com/msp/config.yaml"
+  cp "${PWD}/organizations/fabric-ca/investorOrg/msp/config.yaml" "${PWD}/organizations/fabric-ca/investorOrg/users/User1@investorOrg.voternet.com/msp/config.yaml"
 
   infoln "Generating the org admin msp"
   set -x
-  fabric-ca-client enroll -u https://org1admin:org1adminpw@localhost:7054 --caname ca-investorOrg -M "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/users/Admin@org1.example.com/msp" --tls.certfiles "${PWD}/organizations/fabric-ca/investorOrg/tls-cert.pem"
+  fabric-ca-client enroll -u https://investorOrgadmin:org1adminpw@localhost:7054 --caname ca-investorOrg -M "${PWD}/organizations/fabric-ca/investorOrg/users/Admin@investorOrg.voternet.com/msp" --tls.certfiles "${PWD}/organizations/fabric-ca/investorOrg/tls-cert.pem"
   { set +x; } 2>/dev/null
 
-  cp "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/msp/config.yaml" "${PWD}/organizations/fabric-ca/investorOrg.voternet.com/users/Admin@org1.example.com/msp/config.yaml"
+  cp "${PWD}/organizations/fabric-ca/investorOrg/msp/config.yaml" "${PWD}/organizations/fabric-ca/investorOrg/users/Admin@investorOrg.voternet.com/msp/config.yaml"
 }
 
 function createOrg2() {

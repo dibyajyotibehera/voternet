@@ -117,7 +117,7 @@ csr:
       O: Hyperledger
       OU: Fabric
   hosts:
-    - dibyajyotis-MacBook-Pro-2.local
+    - localhost
 
 #############################################################################
 #  Registration section used to register a new identity with fabric-ca server
