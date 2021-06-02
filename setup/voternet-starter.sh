@@ -12,7 +12,7 @@ export FABRIC_CFG_PATH=$PWD
 COMPOSE_FILE_CA=docker/docker-compose-ca.yaml
 COMPOSE_FILE_BASE=docker/docker-compose-voternet-net.yaml
 COMPOSE_FILE_COUCH=docker/docker-compose-couch.yaml
-CHANNEL_NAME="votingChannel"
+CHANNEL_NAME="votingchannel"
 DELAY="3"
 MAX_RETRY="5"
 VERBOSE="false"
@@ -59,6 +59,8 @@ function infoln() {
 function configureChannel() {
   set -x
   FABRIC_CFG_PATH=${PWD}/config
+  BLOCKFILE="../channel-artifacts/${CHANNEL_NAME}.block"
+
   infoln "Downloading configtxgen"
   VERSION=2.3.2
   ARCH=$(echo "$(uname -s | tr '[:upper:]' '[:lower:]' | sed 's/mingw64_nt.*/windows/')-$(uname -m | sed 's/x86_64/amd64/g')")
@@ -71,6 +73,10 @@ function configureChannel() {
 
   infoln "Generating channel genesis block '${CHANNEL_NAME}.block'"
   createChannelGenesisBlock
+
+  infoln "Creating channel ${CHANNEL_NAME}"
+  createChannel
+  infoln "Channel '$CHANNEL_NAME' created"
   set +x
 }
 
@@ -90,10 +96,39 @@ download() {
 
 createChannelGenesisBlock() {
 	set -x
-	./configtxgen -profile TwoOrgsApplicationGenesis -outputBlock ./channel-artifacts/${CHANNEL_NAME}.block -channelID $CHANNEL_NAME
+	./configtxgen -profile TwoOrgsApplicationGenesis -outputBlock ${BLOCKFILE} -channelID $CHANNEL_NAME
 	res=$?
 	{ set +x; } 2>/dev/null
   verifyResult $res "Failed to generate channel configuration transaction..."
+}
+
+createChannel() {
+	local ORDERER_CA=../organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+	local ORDERER_ADMIN_TLS_SIGN_CERT=../organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/server.crt
+	local ORDERER_ADMIN_TLS_PRIVATE_KEY=../organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/server.key
+
+
+	# Poll in case the raft leader is not set yet
+	local rc=1
+	local COUNTER=1
+	while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ] ; do
+		sleep $DELAY
+		set -x
+		./osnadmin channel join --channelID $CHANNEL_NAME --config-block ${BLOCKFILE} -o localhost:7053 --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY" >&log.txt
+		res=$?
+		{ set +x; } 2>/dev/null
+		let rc=$res
+		COUNTER=$(expr $COUNTER + 1)
+	done
+	cat log.txt
+	verifyResult $res "Channel creation failed"
+}
+
+verifyResult() {
+  if [ $1 -ne 0 ]; then
+      infoln "Channel '$CHANNEL_NAME' creation failed"
+      exit 1
+  fi
 }
 networkUp
 configureChannel
