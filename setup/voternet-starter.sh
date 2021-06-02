@@ -12,7 +12,10 @@ export FABRIC_CFG_PATH=$PWD
 COMPOSE_FILE_CA=docker/docker-compose-ca.yaml
 COMPOSE_FILE_BASE=docker/docker-compose-voternet-net.yaml
 COMPOSE_FILE_COUCH=docker/docker-compose-couch.yaml
-
+CHANNEL_NAME="votingChannel"
+DELAY="3"
+MAX_RETRY="5"
+VERBOSE="false"
 
 function networkUp() {
   #  checkPrereqs
@@ -53,4 +56,44 @@ function infoln() {
   echo -e "${C_BLUE}${1}${C_RESET}"
 }
 
+function configureChannel() {
+  set -x
+  FABRIC_CFG_PATH=${PWD}/config
+  infoln "Downloading configtxgen"
+  VERSION=2.3.2
+  ARCH=$(echo "$(uname -s | tr '[:upper:]' '[:lower:]' | sed 's/mingw64_nt.*/windows/')-$(uname -m | sed 's/x86_64/amd64/g')")
+  BINARY_FILE=hyperledger-fabric-${ARCH}-${VERSION}.tar.gz
+  if [ -d bin ]; then
+     infoln "binaries already downloaded" && cd bin
+  else
+    download "${BINARY_FILE}" "https://github.com/hyperledger/fabric/releases/download/v${VERSION}/${BINARY_FILE}"  && cd bin
+  fi
+
+  infoln "Generating channel genesis block '${CHANNEL_NAME}.block'"
+  createChannelGenesisBlock
+  set +x
+}
+
+# This will download the .tar.gz
+download() {
+  local BINARY_FILE=$1
+  local URL=$2
+  echo "===> Downloading: " "${URL}"
+  curl -L --retry 5 --retry-delay 3 "${URL}" | tar xz || rc=$?
+  if [ -n "$rc" ]; then
+    echo "==> There was an error downloading the binary file."
+    return 22
+  else
+    echo "==> Done."
+  fi
+}
+
+createChannelGenesisBlock() {
+	set -x
+	./configtxgen -profile TwoOrgsApplicationGenesis -outputBlock ./channel-artifacts/${CHANNEL_NAME}.block -channelID $CHANNEL_NAME
+	res=$?
+	{ set +x; } 2>/dev/null
+  verifyResult $res "Failed to generate channel configuration transaction..."
+}
 networkUp
+configureChannel
