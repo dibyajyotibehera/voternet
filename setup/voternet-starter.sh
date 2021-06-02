@@ -77,6 +77,12 @@ function configureChannel() {
   infoln "Creating channel ${CHANNEL_NAME}"
   createChannel
   infoln "Channel '$CHANNEL_NAME' created"
+
+  ## Join all the peers to the channel
+infoln "Joining investorOrg peer to the channel..."
+joinChannel investorOrg
+infoln "Joining managementOrg peer to the channel..."
+joinChannel managementOrg
   set +x
 }
 
@@ -107,7 +113,6 @@ createChannel() {
 	local ORDERER_ADMIN_TLS_SIGN_CERT=../organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/server.crt
 	local ORDERER_ADMIN_TLS_PRIVATE_KEY=../organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/server.key
 
-
 	# Poll in case the raft leader is not set yet
 	local rc=1
 	local COUNTER=1
@@ -124,9 +129,41 @@ createChannel() {
 	verifyResult $res "Channel creation failed"
 }
 
+# joinChannel ORG
+joinChannel() {
+  ORG=$1
+   if [ $ORG = "investorOrg" ]; then
+     export CORE_PEER_TLS_ENABLED=true
+     export ORDERER_CA=../organizations/fabric-ca/ordererOrg/orderers/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+    export CORE_PEER_LOCALMSPID="InvestorOrgMSP"
+    export CORE_PEER_TLS_ROOTCERT_FILE=../organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/tls/ca.crt
+    export CORE_PEER_MSPCONFIGPATH=../organizations/fabric-ca/investorOrg/users/Admin@investorOrg.voternet.com/msp
+    export CORE_PEER_ADDRESS=localhost:7051
+  elif [ $ORG = "managementOrg" ]; then
+    export CORE_PEER_TLS_ENABLED=true
+    export ORDERER_CA=../organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+    export CORE_PEER_LOCALMSPID="ManagementOrgMSP"
+    export CORE_PEER_TLS_ROOTCERT_FILE=../organizations/fabric-ca/managementOrg/peers/peer0.managementOrg.voternet.com/tls/ca.crt
+    export CORE_PEER_MSPCONFIGPATH=../organizations/fabric-ca/managementOrg/users/Admin@managementOrg.voternet.com/msp
+    export CORE_PEER_ADDRESS=localhost:9051
+  fi
+	local rc=1
+	local COUNTER=1
+	## Sometimes Join takes time, hence retry
+	while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ] ; do
+    sleep $DELAY
+    set -x
+    ./peer channel join -b $BLOCKFILE  >&log.txt
+    res=$?
+    { set +x; } 2>/dev/null
+		let rc=$res
+		COUNTER=$(expr $COUNTER + 1)
+	done
+	cat log.txt
+	verifyResult $res "After $MAX_RETRY attempts, $ORG has failed to join channel $CHANNEL_NAME"
+}
 verifyResult() {
   if [ $1 -ne 0 ]; then
-      infoln "Channel '$CHANNEL_NAME' creation failed"
       exit 1
   fi
 }
