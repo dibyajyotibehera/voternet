@@ -4,9 +4,6 @@ function _exit() {
   exit -1
 }
 
-## Exit on first error, print all commands.
-#set -ev
-#set -o pipefail
 export FABRIC_CFG_PATH=$PWD
 
 COMPOSE_FILE_CA=docker/docker-compose-ca.yaml
@@ -18,12 +15,7 @@ MAX_RETRY="5"
 VERBOSE="false"
 
 function networkUp() {
-  #  checkPrereqs
-  #  # generate artifacts if they don't exist
-  #  if [ ! -d "organizations/peerOrganizations" ]; then
-  #    createOrgs
-  #  fi
-  ####docker compose up ca files
+
   infoln "Generating certificates using Fabric CA"
   docker-compose -f $COMPOSE_FILE_CA up -d 2>&1
 
@@ -66,9 +58,9 @@ function configureChannel() {
   ARCH=$(echo "$(uname -s | tr '[:upper:]' '[:lower:]' | sed 's/mingw64_nt.*/windows/')-$(uname -m | sed 's/x86_64/amd64/g')")
   BINARY_FILE=hyperledger-fabric-${ARCH}-${VERSION}.tar.gz
   if [ -d bin ]; then
-     infoln "binaries already downloaded" && cd bin
+    infoln "binaries already downloaded" && cd bin
   else
-    download "${BINARY_FILE}" "https://github.com/hyperledger/fabric/releases/download/v${VERSION}/${BINARY_FILE}"  && cd bin
+    download "${BINARY_FILE}" "https://github.com/hyperledger/fabric/releases/download/v${VERSION}/${BINARY_FILE}" && cd bin
   fi
 
   infoln "Generating channel genesis block '${CHANNEL_NAME}.block'"
@@ -79,10 +71,10 @@ function configureChannel() {
   infoln "Channel '$CHANNEL_NAME' created"
 
   ## Join all the peers to the channel
-infoln "Joining investorOrg peer to the channel..."
-joinChannel investorOrg
-infoln "Joining managementOrg peer to the channel..."
-joinChannel managementOrg
+  infoln "Joining investorOrg peer to the channel..."
+  joinChannel investorOrg
+  infoln "Joining managementOrg peer to the channel..."
+  joinChannel managementOrg
   set +x
 }
 
@@ -101,40 +93,40 @@ download() {
 }
 
 createChannelGenesisBlock() {
-	set -x
-	./configtxgen -profile TwoOrgsApplicationGenesis -outputBlock ${BLOCKFILE} -channelID $CHANNEL_NAME
-	res=$?
-	{ set +x; } 2>/dev/null
+  set -x
+  ./configtxgen -profile TwoOrgsApplicationGenesis -outputBlock ${BLOCKFILE} -channelID $CHANNEL_NAME
+  res=$?
+  { set +x; } 2>/dev/null
   verifyResult $res "Failed to generate channel configuration transaction..."
 }
 
 createChannel() {
-	local ORDERER_CA=../organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
-	local ORDERER_ADMIN_TLS_SIGN_CERT=../organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/server.crt
-	local ORDERER_ADMIN_TLS_PRIVATE_KEY=../organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/server.key
+  local ORDERER_CA=../organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+  local ORDERER_ADMIN_TLS_SIGN_CERT=../organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/server.crt
+  local ORDERER_ADMIN_TLS_PRIVATE_KEY=../organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/tls/server.key
 
-	# Poll in case the raft leader is not set yet
-	local rc=1
-	local COUNTER=1
-	while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ] ; do
-		sleep $DELAY
-		set -x
-		./osnadmin channel join --channelID $CHANNEL_NAME --config-block ${BLOCKFILE} -o localhost:7053 --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY" >&log.txt
-		res=$?
-		{ set +x; } 2>/dev/null
-		let rc=$res
-		COUNTER=$(expr $COUNTER + 1)
-	done
-	cat log.txt
-	verifyResult $res "Channel creation failed"
+  # Poll in case the raft leader is not set yet
+  local rc=1
+  local COUNTER=1
+  while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
+    sleep $DELAY
+    set -x
+    ./osnadmin channel join --channelID $CHANNEL_NAME --config-block ${BLOCKFILE} -o localhost:7053 --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY" >&log.txt
+    res=$?
+    { set +x; } 2>/dev/null
+    let rc=$res
+    COUNTER=$(expr $COUNTER + 1)
+  done
+  cat log.txt
+  verifyResult $res "Channel creation failed"
 }
 
 # joinChannel ORG
 joinChannel() {
   ORG=$1
-   if [ $ORG = "investorOrg" ]; then
-     export CORE_PEER_TLS_ENABLED=true
-     export ORDERER_CA=../organizations/fabric-ca/ordererOrg/orderers/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
+  if [ $ORG = "investorOrg" ]; then
+    export CORE_PEER_TLS_ENABLED=true
+    export ORDERER_CA=../organizations/fabric-ca/ordererOrg/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
     export CORE_PEER_LOCALMSPID="InvestorOrgMSP"
     export CORE_PEER_TLS_ROOTCERT_FILE=../organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/tls/ca.crt
     export CORE_PEER_MSPCONFIGPATH=../organizations/fabric-ca/investorOrg/users/Admin@investorOrg.voternet.com/msp
@@ -147,24 +139,24 @@ joinChannel() {
     export CORE_PEER_MSPCONFIGPATH=../organizations/fabric-ca/managementOrg/users/Admin@managementOrg.voternet.com/msp
     export CORE_PEER_ADDRESS=localhost:9051
   fi
-	local rc=1
-	local COUNTER=1
-	## Sometimes Join takes time, hence retry
-	while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ] ; do
+  local rc=1
+  local COUNTER=1
+  ## Sometimes Join takes time, hence retry
+  while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ]; do
     sleep $DELAY
     set -x
-    ./peer channel join -b $BLOCKFILE  >&log.txt
+    ./peer channel join -b $BLOCKFILE >&log.txt
     res=$?
     { set +x; } 2>/dev/null
-		let rc=$res
-		COUNTER=$(expr $COUNTER + 1)
-	done
-	cat log.txt
-	verifyResult $res "After $MAX_RETRY attempts, $ORG has failed to join channel $CHANNEL_NAME"
+    let rc=$res
+    COUNTER=$(expr $COUNTER + 1)
+  done
+  cat log.txt
+  verifyResult $res "After $MAX_RETRY attempts, $ORG has failed to join channel $CHANNEL_NAME"
 }
 verifyResult() {
   if [ $1 -ne 0 ]; then
-      exit 1
+    exit 1
   fi
 }
 networkUp
