@@ -12,7 +12,7 @@ type VoteContract struct {
 }
 
 func (v *VoteContract) LiveTest() string {
-	return "hi! from votecontract"
+	return "hi! from votecontract 3"
 }
 
 func (v *VoteContract) Cast(ctx VoterNetTransactionContextInterface,

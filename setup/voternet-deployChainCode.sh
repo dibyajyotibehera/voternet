@@ -2,7 +2,8 @@
 
 export FABRIC_CFG_PATH=$PWD/config/
 CC_NAME=voternetchaincode
-CC_VERSION=1.0
+CC_VERSION=${1:-"1.0"}
+CC_SEQUENCE=${2:-"1"}
 CHANNEL_NAME=votingchannel
 rm ${CC_NAME}.tar.gz
 
@@ -45,11 +46,11 @@ res=$?
 
 verifyResult $res "Query installed on peer0.investorOrg has failed"
 
-./bin/peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${CC_VERSION} --package-id $CC_PACKAGE_ID --sequence 1 --tls --cafile $ORDERER_CA
+./bin/peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${CC_VERSION} --package-id $CC_PACKAGE_ID --sequence $CC_SEQUENCE --tls --cafile $ORDERER_CA
 res=$?
 verifyResult $res "Chaincode appproval on peer0.investorOrg has failed"
 
-./bin/peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${CC_VERSION} --sequence 1
+./bin/peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${CC_VERSION} --sequence $CC_SEQUENCE
 res=$?
 verifyResult $res "Chaincode checkcommitreadiness on peer0.investorOrg has failed"
 
@@ -62,10 +63,10 @@ verifyResult $res "Chaincode installation on peer0.managementOrg has failed"
 CC_PACKAGE_ID1=$(./bin/peer lifecycle chaincode queryinstalled | sed -n "/${CC_NAME}_${CC_VERSION}/{s/^Package ID: //; s/, Label:.*$//; p;}")
 res=$?
 verifyResult $res "Query installed on peer0.managementOrg has failed"
-./bin/peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${CC_VERSION} --package-id $CC_PACKAGE_ID --sequence 1 --tls --cafile $ORDERER_CA
+./bin/peer lifecycle chaincode approveformyorg -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${CC_VERSION} --package-id $CC_PACKAGE_ID --sequence $CC_SEQUENCE --tls --cafile $ORDERER_CA
 res=$?
 verifyResult $res "Chaincode appproval on peer0.managementOrg has failed"
-./bin/peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${CC_VERSION} --sequence 1
+./bin/peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${CC_VERSION} --sequence $CC_SEQUENCE
 res=$?
 verifyResult $res "Chaincode checkcommitreadiness on peer0.managementOrg has failed"
 
@@ -73,7 +74,7 @@ CORE_PEER_TLS_MGMT_ROOTCERT_FILE=./organizations/fabric-ca/managementOrg/peers/p
 CORE_PEER_TLS_INVST_ROOTCERT_FILE=./organizations/fabric-ca/investorOrg/peers/peer0.investorOrg.voternet.com/tls/ca.crt
 
 set -x
-./bin/peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${CC_VERSION} --sequence 1 --tls --cafile $ORDERER_CA --peerAddresses localhost:7051 --tlsRootCertFiles $CORE_PEER_TLS_INVST_ROOTCERT_FILE --peerAddresses localhost:9051 --tlsRootCertFiles $CORE_PEER_TLS_MGMT_ROOTCERT_FILE
+./bin/peer lifecycle chaincode commit -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${CC_VERSION} --sequence $CC_SEQUENCE --tls --cafile $ORDERER_CA --peerAddresses localhost:7051 --tlsRootCertFiles $CORE_PEER_TLS_INVST_ROOTCERT_FILE --peerAddresses localhost:9051 --tlsRootCertFiles $CORE_PEER_TLS_MGMT_ROOTCERT_FILE
 res=$?
 set +x
 verifyResult $res "Chaincode definition commit failed "
