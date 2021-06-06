@@ -23,14 +23,17 @@ func (v *VoteContract) Cast(ctx VoterNetTransactionContextInterface,
 		IssueDateTime: issueDateTime,
 		Candidateid:   candidateid,
 	}
-	voterSet := ctx.GetVotedList()
-	//not needed since the key is voterid
-	if voterSet[voterid] {
-		return fmt.Errorf(voterid + " already voted")
-	}
 	key, err := ctx.GetStub().CreateCompositeKey("vote", []string{voterid})
 	if err != nil {
 		return xerrors.Errorf("unable to create key %w", err)
+	}
+
+	state, err := ctx.GetStub().GetState(key)
+	if err != nil {
+		return xerrors.Errorf("unable to get statte for key %w", err)
+	}
+	if state != nil {
+		return fmt.Errorf("voter already voted")
 	}
 
 	bytes, err := json.Marshal(vote)
