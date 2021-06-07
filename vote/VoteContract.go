@@ -30,7 +30,7 @@ func (v *VoteContract) Cast(ctx VoterNetTransactionContextInterface,
 
 	state, err := ctx.GetStub().GetState(key)
 	if err != nil {
-		return xerrors.Errorf("unable to get statte for key %w", err)
+		return xerrors.Errorf("unable to get state for key %w", err)
 	}
 	if state != nil {
 		return fmt.Errorf("voter already voted")
