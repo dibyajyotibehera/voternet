@@ -46,18 +46,23 @@ func (_m *VoterNetTransactionContextInterface) GetStub() shim.ChaincodeStubInter
 	return r0
 }
 
-// GetVotedList provides a mock function with given fields:
-func (_m *VoterNetTransactionContextInterface) GetVotedList() map[string]bool {
+// GetVoteCountForCand provides a mock function with given fields:
+func (_m *VoterNetTransactionContextInterface) GetVoteCountForCand() map[string]int64 {
 	ret := _m.Called()
 
-	var r0 map[string]bool
-	if rf, ok := ret.Get(0).(func() map[string]bool); ok {
+	var r0 map[string]int64
+	if rf, ok := ret.Get(0).(func() map[string]int64); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(map[string]bool)
+			r0 = ret.Get(0).(map[string]int64)
 		}
 	}
 
 	return r0
+}
+
+// IncrVoteCountForCand provides a mock function with given fields: _a0
+func (_m *VoterNetTransactionContextInterface) IncrVoteCountForCand(_a0 string) {
+	_m.Called(_a0)
 }

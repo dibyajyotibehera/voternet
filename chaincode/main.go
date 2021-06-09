@@ -7,7 +7,6 @@ import (
 
 func main() {
 	voteContract := new(vote.VoteContract)
-	voteContract.TransactionContextHandler = new(vote.VoterNetTransactionContext)
 	chaincode, err := contractapi.NewChaincode(voteContract)
 	if err != nil {
 		panic(err)

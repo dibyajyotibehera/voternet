@@ -15,7 +15,7 @@ func (v *VoteContract) LiveTest() string {
 	return "hi! from votecontract"
 }
 
-func (v *VoteContract) Cast(ctx VoterNetTransactionContextInterface,
+func (v *VoteContract) Cast(ctx contractapi.TransactionContextInterface,
 	voterid string, issueDateTime string, candidateid string, voteid string) error {
 	vote := Vote{
 		Voteid:        voteid,
@@ -47,4 +47,25 @@ func (v *VoteContract) Cast(ctx VoterNetTransactionContextInterface,
 	}
 
 	return nil
+}
+
+//
+func (v *VoteContract) GetVoteCountForCand(ctx contractapi.TransactionContextInterface, candidateId string) (int64, error) {
+	queryString := fmt.Sprintf("{\"selector\":{\"candidateid\":\"%s\"}}", candidateId)
+	fmt.Printf("- getQueryResultForQueryString queryString:\n%s\n", queryString)
+	var c int64
+	resultsIterator, err := ctx.GetStub().GetQueryResult(queryString)
+	if err != nil {
+		return 0, err
+	}
+	defer resultsIterator.Close()
+
+	for resultsIterator.HasNext() {
+		_, err := resultsIterator.Next()
+		if err != nil {
+			return 0, err
+		}
+		c++
+	}
+	return c, nil
 }
