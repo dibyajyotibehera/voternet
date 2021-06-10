@@ -1,4 +1,4 @@
 # Table of contents
 
-* [Initial page](README.md)
+* [Learn programming smart contracts in Hyperledger Fabric v2](README.md)
 
