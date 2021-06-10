@@ -49,7 +49,6 @@ func (v *VoteContract) Cast(ctx contractapi.TransactionContextInterface,
 	return nil
 }
 
-//
 func (v *VoteContract) GetVoteCountForCand(ctx contractapi.TransactionContextInterface, candidateId string) (int64, error) {
 	queryString := fmt.Sprintf("{\"selector\":{\"candidateid\":\"%s\"}}", candidateId)
 	fmt.Printf("- getQueryResultForQueryString queryString:\n%s\n", queryString)
