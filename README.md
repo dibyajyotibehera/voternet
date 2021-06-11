@@ -1,7 +1,5 @@
 # Learn programming smart contracts in Hyperledger Fabric v2
 
-
-
 ![](.gitbook/assets/hyperledger_fabric_logo_color.png)
 
 * Learn the basics of fabric architecture by setting up a fabric business network
@@ -19,8 +17,9 @@
 
 Clone the project repo [here](https://github.com/dibyajyotibehera/voternet)
 
-
 * Learn the basics of fabric architecture by setting up a fabric business network
 * Write a smart contract and deploy it onto business network
 * Write a fabric client app to invoke smart client 
+
+## Background
 
