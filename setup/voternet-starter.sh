@@ -1,8 +1,4 @@
 #!/bin/bash
-function _exit() {
-  printf "Exiting:%s\n" "$1"
-  exit -1
-}
 
 export FABRIC_CFG_PATH=$PWD
 
