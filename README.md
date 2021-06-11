@@ -20,7 +20,7 @@
 Clone the project repo [here](https://github.com/dibyajyotibehera/voternet)
 
 
-Learn the basics of fabric architecture by setting up a fabric business network
-Write a smart contract and deploy it onto business network
-Write a fabric client app to invoke smart client 
+* Learn the basics of fabric architecture by setting up a fabric business network
+* Write a smart contract and deploy it onto business network
+* Write a fabric client app to invoke smart client 
 
