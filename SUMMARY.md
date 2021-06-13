@@ -6,4 +6,5 @@
   * [Step 2 - Enroll organisations with Fabric CA](setting-up-the-fabric-business-network/step-2-enroll-organisations-with-fabric-ca.md)
   * [Step 3 - Bring up peer nodes](setting-up-the-fabric-business-network/untitled.md)
   * [Step 4 - Configure a channel](setting-up-the-fabric-business-network/step-4-configure-a-channel.md)
+  * [Step 5 - Execute the script](setting-up-the-fabric-business-network/step-5-execute-the-script.md)
 
