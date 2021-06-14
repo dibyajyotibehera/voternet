@@ -40,7 +40,7 @@ aad19ed2fdf0        hyperledger/fabric-ca:latest        "sh -c 'fabric-ca-se…"
 at the end of the script you can check the various containers created in the voternet networj \(3 CA ,2 peers,2 couchdbs and one orderer.
 {% endhint %}
 
-Once you have verified the setup we can bring down the environment with voternet-cleanup.sh
+Once you have verified the setup we can bring down the environment with voternet-cleanup.sh. This script brings down the docker network as well as clears files created from last environment.
 
 {% code title="setup" %}
 ```bash
