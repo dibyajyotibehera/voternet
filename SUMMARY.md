@@ -7,5 +7,6 @@
   * [Step 3 - Bring up peer nodes](setting-up-the-fabric-business-network/untitled.md)
   * [Step 4 - Configure a channel](setting-up-the-fabric-business-network/step-4-configure-a-channel.md)
   * [Step 5 - Execute the script](setting-up-the-fabric-business-network/step-5-execute-the-script.md)
-* [Create a chain code](create-a-chain-code.md)
+* [Create a chain code](create-a-chain-code/README.md)
+  * [Deploy and invoke the chain code](create-a-chain-code/deploy-and-invoke-the-chain-code.md)
 
