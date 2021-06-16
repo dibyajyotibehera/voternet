@@ -9,4 +9,5 @@
   * [Step 5 - Execute the script](setting-up-the-fabric-business-network/step-5-execute-the-script.md)
 * [Create a chain code](create-a-chain-code/README.md)
   * [Deploy and invoke the chain code](create-a-chain-code/deploy-and-invoke-the-chain-code.md)
+  * [What just happened](create-a-chain-code/what-just-happened.md)
 
