@@ -30,6 +30,7 @@ function networkDown() {
   rm  ./organizations/fabric-ca/managementOrg/tls-cert.pem
 
   rm  -rf ./organizations/fabric-ca/ordererOrg
+  rm  -rf ../wallet
 }
 # infoln echos in blue color
 function infoln() {

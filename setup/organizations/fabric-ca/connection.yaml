@@ -31,3 +31,20 @@ certificateAuthorities:
       path: ./setup/organizations/fabric-ca/investorOrg/ca/ca.investorOrg.voternet.com-cert.pem
     httpOptions:
       verify: false
+entityMatchers:
+  peer:
+    - pattern: peer0.investorOrg.voternet.(\w+)
+      urlSubstitutionExp: localhost:7051
+      sslTargetOverrideUrlSubstitutionExp: peer0.investorOrg.voternet.com
+      mappedHost: peer0.investorOrg.voternet.com
+
+    - pattern: peer0.managementOrg.voternet.(\w+)
+      urlSubstitutionExp: localhost:9051
+      sslTargetOverrideUrlSubstitutionExp: peer0.managementOrg.voternet.com
+      mappedHost: peer0.managementOrg.voternet.com
+  orderer:
+    - pattern: (\w+).example.(\w+)
+      urlSubstitutionExp: localhost:7050
+      sslTargetOverrideUrlSubstitutionExp: orderer.example.com
+      mappedHost: orderer.example.com
+
