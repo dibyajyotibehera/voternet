@@ -1,13 +1,25 @@
 package main
 
 import (
+	"fmt"
+	"github.com/google/uuid"
 	"github.com/hyperledger/fabric-sdk-go/pkg/core/config"
 	"github.com/hyperledger/fabric-sdk-go/pkg/gateway"
 	"io/ioutil"
 	"log"
+	"os"
+	"time"
 )
 
 func main() {
+	if len(os.Args) <= 2 {
+		fmt.Printf("provide voter id and candidate id like so: castvote voter1 candidate1")
+		os.Exit(1)
+	}
+
+	voter := os.Args[1]
+	candidate := os.Args[2]
+
 	certPath := "../setup/organizations/fabric-ca/investorOrg/users/User1@investorOrg.voternet.com/msp/signcerts/cert.pem"
 	keyDir := "../setup/organizations/fabric-ca/investorOrg/users/User1@investorOrg.voternet.com/msp/keyStore/"
 	configFilePath := "../setup/organizations/fabric-ca/connection.yaml"
@@ -36,7 +48,7 @@ func main() {
 	}
 
 	contract := network.GetContract("voternetchaincode")
-	result, err := contract.SubmitTransaction("LiveTest")
+	result, err := contract.SubmitTransaction("Cast", voter, time.Now().String(), candidate, uuid.New().String())
 	if err != nil {
 		log.Fatalf("couldnt execute transaction: %v", err)
 	}
