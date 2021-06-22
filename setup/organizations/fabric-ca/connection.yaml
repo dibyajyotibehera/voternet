@@ -1,0 +1,33 @@
+name: voterNet-investorOrg
+version: 1.0.0
+client:
+  organization: investorOrg
+  connection:
+    timeout:
+      peer:
+        endorser: '300'
+organizations:
+  investorOrg:
+    mspid: InvestorOrgMSP
+    peers:
+    - peer0.investorOrg.voternet.com
+    certificateAuthorities:
+    - ca.investorOrg.voternet.com
+peers:
+  peer0.investorOrg.voternet.com:
+    url: grpcs://localhost:7051
+    eventUrl: localhost:7053
+    tlsCACerts:
+      path: ./setup/organizations/fabric-ca/investorOrg/tlsca/tlsca.investorOrg.voternet.com-cert.pem
+          
+    grpcOptions:
+      ssl-target-name-override: peer0.investorOrg.voternet.com
+      hostnameOverride: peer0.investorOrg.voternet.com
+certificateAuthorities:
+  ca.investorOrg.voternet.com:
+    url: https://localhost:7054
+    caName: ca-investorOrg
+    tlsCACerts:
+      path: ./setup/organizations/fabric-ca/investorOrg/ca/ca.investorOrg.voternet.com-cert.pem
+    httpOptions:
+      verify: false
