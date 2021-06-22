@@ -18,7 +18,7 @@ peers:
     url: grpcs://localhost:7051
     eventUrl: localhost:7053
     tlsCACerts:
-      path: ./setup/organizations/fabric-ca/investorOrg/tlsca/tlsca.investorOrg.voternet.com-cert.pem
+      path: ../setup/organizations/fabric-ca/investorOrg/tlsca/tlsca.investorOrg.voternet.com-cert.pem
           
     grpcOptions:
       ssl-target-name-override: peer0.investorOrg.voternet.com
@@ -28,7 +28,7 @@ certificateAuthorities:
     url: https://localhost:7054
     caName: ca-investorOrg
     tlsCACerts:
-      path: ./setup/organizations/fabric-ca/investorOrg/ca/ca.investorOrg.voternet.com-cert.pem
+      path: ../setup/organizations/fabric-ca/investorOrg/ca/ca.investorOrg.voternet.com-cert.pem
     httpOptions:
       verify: false
 entityMatchers:

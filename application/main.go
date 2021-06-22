@@ -8,9 +8,9 @@ import (
 )
 
 func main() {
-	certPath := "./setup/organizations/fabric-ca/investorOrg/users/User1@investorOrg.voternet.com/msp/signcerts/cert.pem"
-	keyDir := "./setup/organizations/fabric-ca/investorOrg/users/User1@investorOrg.voternet.com/msp/keyStore/"
-	configFilePath := "./setup/organizations/fabric-ca/connection.yaml"
+	certPath := "../setup/organizations/fabric-ca/investorOrg/users/User1@investorOrg.voternet.com/msp/signcerts/cert.pem"
+	keyDir := "../setup/organizations/fabric-ca/investorOrg/users/User1@investorOrg.voternet.com/msp/keyStore/"
+	configFilePath := "../setup/organizations/fabric-ca/connection.yaml"
 
 	wallet, err := gateway.NewFileSystemWallet("wallet")
 	if err != nil {
