@@ -1,6 +1,11 @@
 # Create application side code to invoke smartcode
 
+We created the castvote.go as a client to invoke castvote contract in voternetchaincode.
 
+* First create a wallet for any registered user \(user1 in this case\). a wallet is nothing but a file containing the users certs,msp info which will be used by the client app to invoke transaction .It represents the identity which invokes the transaction.
+* gateway is responsible for setting up the network configuration for the transaction . Amongst other things it uses service discovery to get all the endorsers info for submitting the transaction.
+* The minimal network info is provided in the config file connection.yaml
+* finally  get the contract from the channel and invoke the transaction
 
 ```text
 castvote.go
@@ -21,7 +26,7 @@ result, err := contract.SubmitTransaction("Cast", voter, time.Now().String(), ca
 ```
 
 ```text
-cd application 
+cd application  // else the filepaths will be wrong
 
  application % go run castvote.go user2 candidate1
  [fabsdk/core] 2021/06/22 09:59:01 UTC - cryptosuite.GetDefault -> INFO No default cryptosuite found, using default SW implementation
