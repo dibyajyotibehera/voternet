@@ -1,5 +1,7 @@
 # Learn programming smart contracts in Hyperledger Fabric v2
 
+Read the tutorial [here](https://dibyajyotibehera.gitbook.io/learn-hyperledger-fabric-2-with-golang/)
+
 ![](.gitbook/assets/hyperledger_fabric_logo_color.png)
 
 * Learn the basics of fabric architecture by setting up a fabric business network
