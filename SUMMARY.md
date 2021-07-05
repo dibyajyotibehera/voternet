@@ -11,4 +11,5 @@
   * [Deploy and invoke the chain code](create-a-chain-code/deploy-and-invoke-the-chain-code.md)
   * [What just happened](create-a-chain-code/what-just-happened.md)
 * [Create application side code to invoke smartcode](create-application-side-code-to-invoke-smartcode.md)
+* [Recap](recap.md)
 
